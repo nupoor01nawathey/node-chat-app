@@ -16,16 +16,16 @@ const io     = socketIO(server);
 io.on('connection', (socket) => {
     console.log('new user connected');
 
-    // setup newEmail event on sever side
-    socket.emit('newEmail', {
-        'from': 'nupoor01nawathey@gmail.com',
-        text: 'Hey, what\'s going on ?',
-        createdAt: 123
+    // listen to createMessage event setup in CLIENT
+    socket.on('createMessage', (message) => {
+        console.log('create message event', message);
     });
 
-    // listen to newEmail event setup in CLIENT
-    socket.on('createEmail', (newEmail) => {
-        console.log('inside createEmail', newEmail);
+    // listen to newMessage event setup in SERVER
+    socket.emit('newMessage', {
+        from: 'CPK',
+        text: 'What now??',
+        createdAt: 123
     });
 
     // disconnect server

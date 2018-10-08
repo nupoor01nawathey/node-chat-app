@@ -1,23 +1,23 @@
 var socket = io();   
 
 // client connection
-
 socket.on('connection', function () {
     console.log('connected to user client');
 });  
 
-// emit client email data
-socket.emit('createEmail', {
-    to: 'abc@gmail.com',
-    text: 'To mail send'
+// emit client createMessage data
+socket.emit('createMessage', {
+    from: 'Nupoor',
+    text: 'Yes that works for me',
+    createdAt: 123
+});
+
+// setup newMessage event on sever side
+socket.on('newMessage', function(message) {
+    console.log('new message from client', message);
 });
 
 // disconnect client
 socket.on('disconnect', function () {
     console.log('disconnected from user client');
-});
-
-// listen to newEmail event setup in SERVER
-socket.on('newEmail', function(email) {
-    console.log('New email from client', email);
 });
