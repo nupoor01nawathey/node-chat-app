@@ -12,22 +12,20 @@ app.use(express.static(publicPath));
 const server = http.createServer(app);
 const io     = socketIO(server);
 
+const {generateMessage} = require('./utils/message');
 
-io.on('connection', (socket) => {
+io.on('connection', (socket) => { // socket is a single connection
     console.log('new user connected');
 
+    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the Chat App'));
+    socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user connected'));
+
     // listen to createMessage event setup in CLIENT
-    socket.on('createMessage', (message) => {
-        console.log('create message event', message);
+    socket.on('createMessage', (message, callback) => {
+        io.emit('newMessage', generateMessage(message.from, message.text));
+        callback('This is from the server');
     });
-
-    // listen to newMessage event setup in SERVER
-    socket.emit('newMessage', {
-        from: 'CPK',
-        text: 'What now??',
-        createdAt: 123
-    });
-
+    
     // disconnect server
     socket.on('disconnect', (socket) => {
         console.log('disconnected from user');
