@@ -1,7 +1,7 @@
 var socket = io();   
 
 // client connection
-socket.on('connection', function () {
+socket.on('connect', function () {
     console.log('connected to user client');
 });  
 
@@ -17,17 +17,43 @@ socket.on('newMessage', function(message) {
     console.log('new message from client', message);
     const li = document.createElement('li');
     const ol = document.getElementById('messages');
-    li.innerHTML = message.text;
+    li.innerHTML = message.text
+    ol.appendChild(li);
+});
+
+socket.on('createLocationMsg', function(message) {
+    console.log('new message from client', message);
+    const ol = document.getElementById('messages');
+    const li = document.createElement('li');
+    const a  = document.createElement('a');
+    a.setAttribute('target', '_blank');
+    a.setAttribute('href', message.url);
+    a.innerHTML = 'My current location'; 
+    li.appendChild(a);
     ol.appendChild(li);
 });
 
 const button = document.querySelector('button');
-
 button.addEventListener('click', function(e) {
-    var textStr  = document.querySelector('input').value;
     socket.emit('createMessage', {
         from: 'User11',
-        //text: textStr,
         text: document.getElementsByName('message')[0].value,
     }, function() {});
+});
+
+
+const shareLocation = document.querySelector('#share-location');
+shareLocation.addEventListener('click', function(e) {
+    if(!navigator.geolocation) {
+        return alert('Your browser does not support geolocation API');
+    }
+    navigator.geolocation.getCurrentPosition(function(position) {
+        console.log(position);
+        socket.emit('createLocationMsg', {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+        });
+    }, function() {
+        alert('Unable to fetch location');
+    });
 });
