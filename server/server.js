@@ -13,13 +13,20 @@ const server = http.createServer(app);
 const io     = socketIO(server);
 
 const {generateMessage, generateLocationMsg} = require('./utils/message');
+const {isRealString} = require('./utils/validations');
 
 io.on('connection', (socket) => { // socket is a single connection
-    console.log('new user connected');
-
-    socket.emit('newMessage', generateMessage('Admin', 'Welcome to the Chat App'));
-
-    socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user connected'));
+    socket.on('join', (params, cb) => {
+        if(!isRealString(params.name) || !isRealString(params.room)) {
+            cb('name and room name are required');
+        }
+        socket.join(params.room);
+        //socket.leave(params.room);
+        socket.emit('newMessage', generateMessage('Admin', 'Welcome to the Chat App'));
+        socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined`));
+    
+        cb();
+    });
 
     // listen to createMessage event setup in CLIENT
     socket.on('createMessage', (message, callback) => {
@@ -28,7 +35,6 @@ io.on('connection', (socket) => { // socket is a single connection
     });
 
     socket.on('createLocationMsg', (coords) => {
-        // console.log(coords)
         io.emit('createLocationMsg', generateLocationMsg('Admin', coords.latitude, coords.longitude));
     });
     
