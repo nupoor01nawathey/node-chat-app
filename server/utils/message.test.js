@@ -7,7 +7,6 @@ describe('generatemessage', () => {
         const from = 'Jen' ,
               text = 'Some sample message';
         message = generateMessage(from, text);
-   
         expect(typeof message.createdAt).toBe('number');
         expect(message).toMatchObject({from, text});
 
@@ -22,8 +21,7 @@ describe('generateLocationMsg', () => {
               longitude = 12,
               url       = `https://google.com/maps?q=${latitude},${longitude}` ;
         message = generateLocationMsg(from, latitude, longitude);
-
         expect(typeof message.createdAt).toBe('number');
-        expect(message).toMatchObject({from: from, url: url, createdAt: moment().valueOf()});
+        expect({from:message.from,url:message.url}).toMatchObject({from: from, url: url});
     });
 });
