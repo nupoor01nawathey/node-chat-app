@@ -2,14 +2,23 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="stylesheet" href="css/style.css">
     </head>
-    <body>
-        <p>Welcome to chat app</p>
-        <input type="text" name="message" placeholder="Enter message">
-        <button>Send</button>
-        <ol id="messages"></ol>
-        <button id="share-location">Share Location</button> 
+    <body class="chat">
+        <div class="chat__sidebar">
+            <h3>People - Group Name</h3>
+            <div id="users"></div>
+        </div>
+        <div class="chat__main">
+            <ol id="messages" class="chat__messages"></ol>
+            <div class="chat__footer">
+                <input type="text" name="message" placeholder="Enter message">
+                <button>Send</button>
+                <button id="share-location">Share Location</button> 
+            </div>
+        </div>
         <script src="/socket.io/socket.io.js"></script>
-        <script src="/js/index.js"></script>
+        <script src="/js/index.js"></script>      
     </body>
 </html>

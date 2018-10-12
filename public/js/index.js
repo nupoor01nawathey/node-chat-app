@@ -34,11 +34,14 @@ socket.on('createLocationMsg', function(message) {
 });
 
 const button = document.querySelector('button');
+const textBx = document.getElementsByName('message')[0];
 button.addEventListener('click', function(e) {
     socket.emit('createMessage', {
         from: 'User11',
-        text: document.getElementsByName('message')[0].value,
-    }, function() {});
+        text: textBx.value,
+    }, function() {
+        textBx.value = '';
+    });
 });
 
 
