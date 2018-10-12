@@ -1,4 +1,5 @@
 const expect = require('expect');
+const moment = require('moment');
 const {generateMessage, generateLocationMsg} = require('./message');
 
 describe('generatemessage', () => {
@@ -23,6 +24,6 @@ describe('generateLocationMsg', () => {
         message = generateLocationMsg(from, latitude, longitude);
 
         expect(typeof message.createdAt).toBe('number');
-        expect(message).toMatchObject({from: from, url: url, createdAt: new Date().getTime()});
+        expect(message).toMatchObject({from: from, url: url, createdAt: moment().valueOf()});
     });
 });

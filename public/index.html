@@ -13,12 +13,39 @@
         <div class="chat__main">
             <ol id="messages" class="chat__messages"></ol>
             <div class="chat__footer">
-                <input type="text" name="message" placeholder="Enter message">
+                <input type="text" name="message" placeholder="Enter message" autofocus autocomplete="off">
                 <button>Send</button>
                 <button id="share-location">Share Location</button> 
             </div>
         </div>
+        <script id="msessage-template" type="text/template">
+            <li class="message">
+                <div class="message__title">
+                    <h4>{{ from }}</h4>
+                    <span>{{ createdAt }}</span>
+                </div>
+                <div class="message__body">
+                    <p>{{ text }}</p>
+                </div>
+            </li>
+        </script>
+        <script id="location-template" type="text/template">
+            <li class="message">
+                <div class="message_title">
+                    <h4>{{ from }}</h4>
+                    <span>{{ createdAt }}</span>
+                </div>
+                <div class="message__body">
+                    <p>
+                        <a href="{{ url }}" target="_blank">My Current Location</a>
+                    </p>
+                </div>
+            </li>
+        </script>
+
         <script src="/socket.io/socket.io.js"></script>
-        <script src="/js/index.js"></script>      
+        <script src="/js/index.js"></script>   
+        <script src="/js/libs/moment.js"></script>   
+        <script src="/js/libs/mustache.js"></script>
     </body>
 </html>
