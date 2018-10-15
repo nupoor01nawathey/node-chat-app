@@ -6,7 +6,7 @@ function scrollToBottom() {
     const messages   = document.querySelector('#messages');
  
     // heights
-    let { clientHeight, scrollTop, scrollTop, scrollHeight } = messages;
+    let { clientHeight, scrollTop, scrollHeight } = messages;
     const prevMessageHeigth = newMessageHeight;
     console.log(`prevMessageHeight : ${prevMessageHeigth}`)
     newMessageHeight = parseInt(window.getComputedStyle(messages.lastElementChild).getPropertyValue('height'));
@@ -35,6 +35,10 @@ socket.on('disconnect', function () {
     console.log('disconnected from user client');
 });
 
+
+socket.on('updateUserList', function(users) {
+    console.log('users list', users);
+});
 
 
 // listen to newMessage event on sever side
