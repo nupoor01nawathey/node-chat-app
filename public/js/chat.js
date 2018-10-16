@@ -8,7 +8,6 @@ function scrollToBottom() {
     // heights
     let { clientHeight, scrollTop, scrollHeight } = messages;
     const prevMessageHeigth = newMessageHeight;
-    console.log(`prevMessageHeight : ${prevMessageHeigth}`)
     newMessageHeight = parseInt(window.getComputedStyle(messages.lastElementChild).getPropertyValue('height'));
     
     if(clientHeight + scrollTop + newMessageHeight + prevMessageHeigth >=  scrollHeight) {
@@ -38,6 +37,15 @@ socket.on('disconnect', function () {
 
 socket.on('updateUserList', function(users) {
     console.log('users list', users);
+    let userList = document.createElement('ol');
+    users.forEach(function(userName) {
+        let li = document.createElement('li');
+        let name = document.createTextNode(userName);
+        li.appendChild(name);
+        userList.appendChild(li);
+    });
+    document.querySelector('#users').innerHTML = '';
+    document.querySelector('#users').appendChild(userList);
 });
 
 
@@ -72,7 +80,6 @@ const button = document.querySelector('button');
 const textBx = document.getElementsByName('message')[0];
 button.addEventListener('click', function(e) {
     socket.emit('createMessage', {
-        from: 'User11',
         text: textBx.value
     }, function() {
         textBx.value = '';
@@ -85,7 +92,7 @@ shareLocation.addEventListener('click', function(e) {
     if(!navigator.geolocation) {
         return alert('Your browser does not support geolocation API');
     }
-    shareLocation.setAttribute('disabled', 'disabled');
+    //shareLocation.setAttribute('disabled', 'disabled');
     navigator.geolocation.getCurrentPosition(function(position) {
         shareLocation.removeAttribute('disabled');
         socket.emit('createLocationMsg', {
@@ -94,7 +101,7 @@ shareLocation.addEventListener('click', function(e) {
         });
     }, function() {
         alert('Unable to fetch location');
-        shareLocation.removeAttribute('disabled');
+        //shareLocation.removeAttribute('disabled');
     });
 });
 

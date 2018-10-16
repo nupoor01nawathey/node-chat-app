@@ -24,7 +24,6 @@ io.on('connection', (socket) => { // socket is a single connection
             return cb('name and room name are required'); // return for invalid data
         }
         socket.join(params.room);
-        console.log('All users list', users);
         users.removeUser(socket.id);
         users.addUser(socket.id, params.name, params.room);
         io.to(params.room).emit('updateUserList', users.getUserList(params.room));
@@ -38,16 +37,23 @@ io.on('connection', (socket) => { // socket is a single connection
 
     // listen to createMessage event setup in CLIENT
     socket.on('createMessage', (message, callback) => {
-        io.emit('newMessage', generateMessage(message.from, message.text));
-        // callback('This is from the server');
+        const user = users.getUser(socket.id);
+        if(user && isRealString(message.text)) {
+            io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+        }
+        callback();
     });
 
     socket.on('createLocationMsg', (coords) => {
-        io.emit('createLocationMsg', generateLocationMsg('Admin', coords.latitude, coords.longitude));
+        const user = users.getUser(socket.id);
+        if(user) {
+            io.to(user.room).emit('createLocationMsg', generateLocationMsg(user.name, coords.latitude, coords.longitude));
+
+        }
     });
     
     // disconnect server
-    socket.on('disconnect', (socket) => {
+    socket.on('disconnect', () => {
         console.log('disconnected from user');
         const user = users.removeUser(socket.id);
         console.log(`going to delete user : ${user}`);
